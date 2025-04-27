@@ -1,12 +1,12 @@
-name: Build and deploy Python app to Azure Web App
+name: Build and Deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: NewRetailApp   # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.11'              # set this to the Python version to use
+  AZURE_WEBAPP_NAME: NewRetailApp   # Make sure this matches your Azure Web App name
+  PYTHON_VERSION: '3.11'             # Using Python 3.9 to match your setup
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -22,19 +22,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+          python-version: '3.9'
 
       - name: Install dependencies
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
           name: python-app
           path: .
@@ -44,12 +41,12 @@ jobs:
     needs: build
     environment:
       name: 'Development'
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Azure login using service principal credentials
+      # Login to Azure using service principal credentials
       - name: 'Azure Login'
         uses: azure/login@v1
         with:
@@ -57,14 +54,8 @@ jobs:
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: python-app
-          path: .
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
