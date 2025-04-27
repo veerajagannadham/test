@@ -58,7 +58,7 @@ jobs:
           tenant-id: f5222e6c-5fc6-48eb-8f03-73db18203b63
           subscription-id: d1b02253-bdbf-49fe-b947-b372bf8a229e
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          auth-type: service-principal  # <-- This fixes the OIDC vs password login confusion
+          auth-type: SERVICE_PRINCIPAL   # <-- Uppercase with underscore!
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
