@@ -1,8 +1,8 @@
 name: Build and deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: NewRetailApp   # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.9'              # set this to the Python version to use
+  AZURE_WEBAPP_NAME: NewRetailApp   # Set this to the name of your Azure Web App
+  PYTHON_VERSION: '3.9'              # Set this to the Python version to use
 
 on:
   push:
@@ -17,13 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
-        uses: actions/setup-python@v3.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: pip
 
       - name: Create and start virtual environment
         run: |
@@ -31,11 +32,13 @@ jobs:
           source venv/bin/activate
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          source venv/bin/activate
+          pip install -r requirements.txt
 
-      # Optional: Add step to run tests here
+      # Optional: Add step to run tests here (e.g., pytest)
 
-      - name: Upload artifact for deployment jobs
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: python-app
@@ -59,10 +62,10 @@ jobs:
           name: python-app
           path: .
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          startup-command: 'gunicorn app:app'  # <<<<< THIS IS ADDED
+          startup-command: 'gunicorn app:app'
