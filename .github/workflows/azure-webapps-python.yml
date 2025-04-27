@@ -1,8 +1,8 @@
 name: Build and Deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: NewRetailApp   # Make sure this matches your Azure Web App name
-  PYTHON_VERSION: '3.11'             # Using Python 3.9 to match your setup
+  AZURE_WEBAPP_NAME: NewRetailApp   # Azure Web App name
+  PYTHON_VERSION: '3.11'             # Python version
 
 on:
   push:
@@ -57,6 +57,7 @@ jobs:
           client-id: 2dbb826a-3d55-4250-b9c0-ba1c3bd1b0b8
           tenant-id: f5222e6c-5fc6-48eb-8f03-73db18203b63
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscription-id: d1b02253-bdbf-49fe-b947-b372bf8a229e  # <-- This was missing!
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
