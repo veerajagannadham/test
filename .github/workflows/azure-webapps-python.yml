@@ -2,7 +2,7 @@ name: Build and deploy Python app to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: NewRetailApp   # Set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.9'              # Set this to the Python version to use
+  PYTHON_VERSION: '3.11'              # Set this to the Python version to use
 
 on:
   push:
