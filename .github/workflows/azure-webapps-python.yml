@@ -1,8 +1,8 @@
 name: Build and Deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: NewRetailApp   # Azure Web App name
-  PYTHON_VERSION: '3.11'             # Python version
+  AZURE_WEBAPP_NAME: NewRetailApp
+  PYTHON_VERSION: '3.11'
 
 on:
   push:
@@ -54,11 +54,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          client-id: 2dbb826a-3d55-4250-b9c0-ba1c3bd1b0b8
-          tenant-id: f5222e6c-5fc6-48eb-8f03-73db18203b63
-          subscription-id: d1b02253-bdbf-49fe-b947-b372bf8a229e
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          auth-type: SERVICE_PRINCIPAL   # <-- Uppercase with underscore!
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
