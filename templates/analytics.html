@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Analytics Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #052c65;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+        }
+        .dashboard-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #052c65;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .chart-container {
+            width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .chart-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .metric-card {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            width: 30%;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .metric-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #052c65;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .metric-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Retail Analytics Dashboard</h1>
+        </header>
+        
+        <div class="dashboard-section">
+            <h2>Basket Analysis</h2>
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-title">Model Accuracy</div>
+                    <div class="metric-value">100.0%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">High Purchase Rate</div>
+                    <div class="metric-value">2.5%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Average Spend</div>
+                    <div class="metric-value">$3.74</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <img src="/static/images/basket_analysis.png" alt = " Spend vs Units Chart" class="chart-img" />
+                <p style="text-align: center; font-style: italic; margin-top: 5px;">
+                    Spend vs Units (colored by High Purchase) - Shows relationship between customer spending and units purchased
+                </p>
+            </div>
+            <p>The scatter plot shows the relationship between spend amount and units purchased. Points are colored based on "high purchase" classification (greater than 3 units). Clusters indicate potential customer segments for targeted marketing.</p>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Churn Prediction</h2>
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-title">Churn Rate</div>
+                    <div class="metric-value">21.2%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Model Precision</div>
+                    <div class="metric-value">100.0%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">At-Risk Households</div>
+                    <div class="metric-value">72</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <img src="/static/images/churn_prediction.png" alt="Churn Risk Distribution" class="chart-img" />
+                <p style="text-align: center; font-style: italic; margin-top: 5px;">
+                    Churn Risk Distribution - Shows number of households with high vs. low churn risk
+                </p>
+            </div>
+            <p>The bar chart displays the distribution of households at risk of churning vs those likely to remain. Churn risk is determined by a significant drop in spending (>50% decrease from month 7 to month 8). Predictive features include monthly spending patterns.</p>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Customer Lifetime Value (CLV)</h2>
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-title">Avg CLV</div>
+                    <div class="metric-value">$110.45</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">R� Score</div>
+                    <div class="metric-value">0.67</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">MSE</div>
+                    <div class="metric-value">1358.44</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <img src="/static/images/clv_analysis.png" alt="Actual vs Predicted CLV" class="chart-img" />
+                <p style="text-align: center; font-style: italic; margin-top: 5px;">
+                    Actual vs Predicted Customer Lifetime Value - Shows model prediction accuracy
+                </p>
+            </div>
+            <p>The scatter plot compares actual vs. predicted customer lifetime value (using total spend as a proxy). Points closer to the red diagonal line indicate more accurate predictions. The model uses total units purchased as the primary predictor of customer spending potential.</p>
+        </div>
+        
+        <footer>
+            <p>Retail Analytics Dashboard | Data Updated: April 28, 2025</p>
+        </footer>
+    </div>
+</body>
+</html>

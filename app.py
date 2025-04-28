@@ -1,4 +1,4 @@
-# ==>> Full working corrected version of your app.py <<==
+
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, json
 from sqlalchemy import create_engine, text
@@ -311,6 +311,14 @@ def search():
                          household_info=household_info,
                          transactions=transactions,
                          custom_css=add_custom_css())
+
+@app.route("/analytics")
+def analytics():
+    if "username" not in session:
+        flash("Please log in to access this page.", "danger")
+        return redirect(url_for("login"))
+    
+    return render_template("analytics.html", custom_css=add_custom_css())
 
 @app.route("/logout")
 def logout():

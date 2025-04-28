@@ -6,19 +6,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
-# Database connection configuration
-DB_CONFIG = {
-    'user': 'root',
-    'password': 'admin',
-    'host': '127.0.0.1',
-    'database': 'azure_retail',
-    'port': 3306
+# Database configuration for Azure MySQL
+db_connection_config = {
+    "user": "admin_user",
+    "password": "Root123***",
+    "host": "azure-retail-webapp.mysql.database.azure.com",
+    "database": "azure_retail",
+    "port": 3306,
 }
 
-
-# Connect to the database
-connection_string = f"mysql+pymysql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
-engine = create_engine(connection_string)
+# Connection string
+db_connection_string = (
+    f"mysql+pymysql://{db_connection_config['user']}:{db_connection_config['password']}"
+    f"@{db_connection_config['host']}:{db_connection_config['port']}/{db_connection_config['database']}"
+    "?ssl_ca=DigiCertGlobalRootCA.crt.pem&ssl_verify_cert=true"
+)
+engine = create_engine(db_connection_string)
         
 
 # Step 1: Load data

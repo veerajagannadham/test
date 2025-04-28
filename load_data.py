@@ -4,68 +4,119 @@ import os
 from datetime import datetime
 
 # Database connection configuration
-DB_CONFIG = {
-    'user': 'root',
-    'password': 'admin',
-    'host': '127.0.0.1',
-    'database': 'azure_retail',
-    'port': 3306
+db_connection_config = {
+    "user": "admin_user",
+    "password": "Root123***",
+    "host": "azure-retail-webapp.mysql.database.azure.com",
+    "database": "azure_retail",
+    "port": 3306,
 }
+
+# SSL certificate path (adjust as needed)
+ssl_cert_path = "DigiCertGlobalRootCA.crt.pem"
+
+# Connection string
+db_connection_string = (
+    f"mysql+pymysql://{db_connection_config['user']}:{db_connection_config['password']}"
+    f"@{db_connection_config['host']}:{db_connection_config['port']}/{db_connection_config['database']}"
+    f"?ssl_ca={ssl_cert_path}&ssl_verify_cert=true"
+)
 
 def clean_data(df):
     """Clean and standardize column names"""
     df.columns = [col.strip().lower() for col in df.columns]
     return df
 
+def validate_data(df, table_name):
+    """Basic data validation"""
+    if df.empty:
+        raise ValueError(f"No data found for {table_name}")
+    print(f"Validating {table_name} data... {len(df)} records found")
+    return True
+
 def load_data():
     try:
-        # Create database connection
-        connection_string = f"mysql+pymysql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
-        engine = create_engine(connection_string)
+        # Create database engine
+        engine = create_engine(db_connection_string)
         
+        # Verify data directory exists
+        data_dir = 'data'
+        if not os.path.exists(data_dir):
+            raise FileNotFoundError(f"Data directory '{data_dir}' not found")
+
         # Load and clean data files
-        print("Loading data files...")
+        print("\nLoading data files...")
         
         # Load households data
-        households = pd.read_csv('data/400_households.csv')
+        households_path = os.path.join(data_dir, '400_households.csv')
+        households = pd.read_csv(households_path)
         households = clean_data(households)
-        print(f"Loaded {len(households)} household records")
+        validate_data(households, 'households')
         
-        # Load transactions data (limiting to 400 records as per filename)
-        transactions = pd.read_csv('data/400_transactions.csv')
+        # Load transactions data
+        transactions_path = os.path.join(data_dir, '400_transactions.csv')
+        transactions = pd.read_csv(transactions_path)
         transactions = clean_data(transactions)
-        print(f"Loaded {len(transactions)} transaction records")
+        validate_data(transactions, 'transactions')
         
         # Load products data if available
-        try:
-            products = pd.read_csv('data/400_products.csv')
+        products_path = os.path.join(data_dir, '400_products.csv')
+        products = None
+        if os.path.exists(products_path):
+            products = pd.read_csv(products_path)
             products = clean_data(products)
-            print(f"Loaded {len(products)} product records")
-        except FileNotFoundError:
+            validate_data(products, 'products')
+        else:
             print("Products file not found, skipping")
-            products = None
-        
+
         # Upload data to database
-        print("Uploading data to database...")
+        print("\nUploading data to database...")
         
         # Households table
-        households.to_sql('households', engine, if_exists='replace', index=False)
-        print("Uploaded households data")
+        households.to_sql(
+            'households', 
+            engine, 
+            if_exists='replace', 
+            index=False,
+            method='multi',
+            chunksize=1000
+        )
+        print("Successfully uploaded households data")
         
         # Transactions table
-        transactions.to_sql('transactions', engine, if_exists='replace', index=False)
-        print("Uploaded transactions data")
+        transactions.to_sql(
+            'transactions', 
+            engine, 
+            if_exists='replace', 
+            index=False,
+            method='multi',
+            chunksize=1000
+        )
+        print("Successfully uploaded transactions data")
         
         # Products table if available
         if products is not None:
-            products.to_sql('products', engine, if_exists='replace', index=False)
-            print("Uploaded products data")
+            products.to_sql(
+                'products', 
+                engine, 
+                if_exists='replace', 
+                index=False,
+                method='multi',
+                chunksize=1000
+            )
+            print("Successfully uploaded products data")
         
-        print("Data loading completed successfully!")
+        print("\nData loading completed successfully!")
         
     except Exception as e:
-        print(f"Error loading data: {str(e)}")
+        print(f"\nError loading data: {str(e)}")
         raise
+    finally:
+        # Ensure connection is closed
+        if 'engine' in locals():
+            engine.dispose()
 
 if __name__ == "__main__":
+    print("Starting data loading process...")
     load_data()
+    print("Process completed.")
