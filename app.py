@@ -14,7 +14,7 @@ app.secret_key = "ce7583aac90d46c4846459342e69d0d7"  # Replace with a strong sec
 db_connection_config = {
     "user": "admin_user",
     "password": "Root123***",
-    "host": "azure-retail-webapp.mysql.database.azure.com",
+    "host": "test-azure-retail.mysql.database.azure.com",
     "database": "azure_retail",
     "port": 3306,
 }
@@ -50,19 +50,27 @@ def home():
         username = request.form["username"]
         password = request.form["password"]
         email = request.form["email"]
+        
+        app.logger.info(f"Attempting to register: {username}, {email}")
+        
         try:
             insert_query = text(
                 "INSERT INTO users (username, password, email) VALUES (:username, :password, :email)"
             )
             with engine.connect() as connection:
-                connection.execute(insert_query, {"username": username, "password": password, "email": email})
+                result = connection.execute(insert_query, {"username": username, "password": password, "email": email})
+                connection.commit()
+                app.logger.info(f"Inserted {result.rowcount} rows")
 
             flash("Registration successful! Please log in.", "success")
             return redirect(url_for("login"))
         except Exception as e:
+            app.logger.error(f"Registration error: {str(e)}", exc_info=True)
             flash(f"Registration failed: {str(e)}", "danger")
+            # Stay on the same page to see the error message
+            return render_template("home.html", custom_css=add_custom_css())
 
-    return render_template("home.html", custom_css=add_custom_css())
+    return render_template("home.html", custom_custom_css=add_custom_css())
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

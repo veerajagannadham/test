@@ -7,7 +7,7 @@ from datetime import datetime
 db_connection_config = {
     "user": "admin_user",
     "password": "Root123***",
-    "host": "azure-retail-webapp.mysql.database.azure.com",
+    "host": "test-azure-retail.mysql.database.azure.com",
     "database": "azure_retail",
     "port": 3306,
 }
