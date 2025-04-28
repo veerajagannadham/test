@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Data</title>
+  {{ custom_css|safe }}
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -129,11 +130,38 @@
     a:hover {
       text-decoration: underline;
     }
+    
+    .message {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Upload Dataset</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
     <form
       action="{{ url_for('upload') }}"
       method="POST"
@@ -156,7 +184,7 @@
       <input type="submit" value="Upload" />
     </form>
     
-    <p class="back-link"><a href="/dashboard/">Back to Dashboard</a></p>
+    <p class="back-link"><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
   </div>
 </body>
 </html>
