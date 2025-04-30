@@ -124,10 +124,10 @@ def dashboard():
 
             # Get spend data
             spend_query = text("""
-                SELECT purchase_date as date, SUM(spend) as spend
+                SELECT purchase_ as date, SUM(spend) as spend
                 FROM transactions
-                GROUP BY purchase_date
-                ORDER BY purchase_date
+                GROUP BY purchase_
+                ORDER BY purchase_
             """)
             spend_data = [
                 {"date": str(row.date), "spend": float(row.spend)} 
@@ -171,9 +171,9 @@ def dashboard():
 
             # Get recent transactions (fixed dictionary conversion)
             recent_query = text("""
-                SELECT hshd_num, basket_num, purchase_date, product_num, spend, units, store_r
+                SELECT hshd_num, basket_num, purchase_, product_num, spend, units, store_r
                 FROM transactions
-                ORDER BY purchase_date DESC
+                ORDER BY purchase_ DESC
                 LIMIT 10
             """)
             recent_transactions = []
@@ -181,7 +181,7 @@ def dashboard():
                 trans = {
                     "hshd_num": row.hshd_num,
                     "basket_num": row.basket_num,
-                    "purchase_date": str(row.purchase_date),
+                    "purchase_date": str(row.purchase_),
                     "product_num": row.product_num,
                     "spend": float(row.spend),
                     "units": row.units,
